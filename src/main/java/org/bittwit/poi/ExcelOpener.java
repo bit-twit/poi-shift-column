@@ -87,6 +87,7 @@ public class ExcelOpener {
 					Cell newCell = r.createCell(col, leftCell.getCellType());
 					cloneCell(newCell, leftCell);
 					if (newCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+						newCell.setCellFormula(ExcelHelper.updateFormula(newCell.getCellFormula(), columnIndex));
 						evaluator.notifySetFormula(newCell);
 						CellValue cellValue = evaluator.evaluate(newCell);
 						evaluator.evaluateFormulaCell(newCell);
@@ -113,13 +114,13 @@ public class ExcelOpener {
 			sheet.setColumnWidth(col, sheet.getColumnWidth(col - 1));
 		}
 
-/*
-		Row Specialrow = sheet.getRow(46);
-		String formula = "SUM(AP16:AP46)";
-		Cell cellFormula = Specialrow.createCell(nrCols - 1);
-		cellFormula.setCellType(XSSFCell.CELL_TYPE_FORMULA);
-		cellFormula.setCellFormula(formula);
-*/
+		// currently updates formula on the last cell of the moved column
+		// TODO: update all cells if their formulas contain references to the moved cell
+//		Row specialRow = sheet.getRow(nrRows-1);
+//		Cell cellFormula = specialRow.createCell(nrCols - 1);
+//		cellFormula.setCellType(XSSFCell.CELL_TYPE_FORMULA);
+//		cellFormula.setCellFormula(formula);
+
 		XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 	}
 
